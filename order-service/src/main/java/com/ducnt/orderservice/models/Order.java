@@ -1,5 +1,6 @@
 package com.ducnt.orderservice.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +13,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Order {
     @Id
     @GeneratedValue
@@ -20,6 +20,12 @@ public class Order {
 
     private String orderNumber;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<OrderLineItem> lineItems;
+
+    public void setLineItems(List<OrderLineItem> lineItems) {
+        this.lineItems = lineItems;
+        lineItems.forEach(lineItem -> lineItem.setOrder(this));
+    }
 }

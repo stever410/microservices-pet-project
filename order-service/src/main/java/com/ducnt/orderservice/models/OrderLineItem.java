@@ -1,5 +1,6 @@
 package com.ducnt.orderservice.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,5 +27,6 @@ public class OrderLineItem {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
     private Order order;
 }
