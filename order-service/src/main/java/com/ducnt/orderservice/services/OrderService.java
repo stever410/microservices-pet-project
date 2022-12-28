@@ -21,7 +21,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     public Order createOrder(OrderRequest orderRequest) {
         List<OrderLineItem> orderLineItems = orderRequest.getOrderLineItems().stream()
@@ -36,8 +36,8 @@ public class OrderService {
                 .collect(Collectors.toList());
 
         // Call inventory service and create order if product in stock
-        var inventoryResponses = webClient.get()
-                .uri("http://localhost:8082/api/inventories",
+        var inventoryResponses = webClientBuilder.build().get()
+                .uri("http://inventory-service/api/inventories",
                         uriBuilder -> uriBuilder.queryParam("skuCodes", skuCodes).build())
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class)
